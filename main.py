@@ -12,6 +12,7 @@ from pydantic import BaseModel
 import uvicorn
 from pythonjsonlogger import jsonlogger
 
+# Configure structured logging
 def setup_logging():
     log_handler = logging.FileHandler('app.log')
     formatter = jsonlogger.JsonFormatter(
@@ -145,6 +146,7 @@ async def delete_user(user_id: int):
     logger.info(f"Deleted user {user_id}", extra={"event_type": "user_deleted", "user_id": user_id})
     return {"message": f"User {user_id} deleted"}
 
+# Simulate some anomalous behavior
 @app.get("/simulate-error")
 async def simulate_error():
     logger.error("Simulated error endpoint accessed", extra={"event_type": "error_simulation"})
@@ -152,10 +154,11 @@ async def simulate_error():
 
 @app.get("/simulate-heavy-load")
 async def simulate_heavy_load():
-
+    # Simulate a slow endpoint
     await asyncio.sleep(2)
     logger.warning("Heavy load endpoint accessed", extra={"event_type": "heavy_load", "response_time": 2.0})
     return {"message": "Heavy load simulation completed"}
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
+
